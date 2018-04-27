@@ -102,7 +102,7 @@
                 {/volist}
                 <tr>
                     <td colspan="8" style="background-color:#f8f8f8">
-                        <a class="layui-btn layui-btn-small j-add-tr" data-tpl="config">添加配置</a>
+                        <a class="layui-btn layui-btn-sm j-add-tr" data-tpl="config">添加配置</a>
                         <span class="layui-word-aux">提示：当配置类型为单选按钮、多选框、下拉框、开关的时候，配置选项为必填，参考格式：选项值:选项名，多个选项请换行。</span>
                     </td>
                 </tr>
@@ -143,7 +143,7 @@
                 {/volist}
                 <tr>
                     <td colspan="5" style="background-color:#f8f8f8">
-                        <a class="layui-btn layui-btn-small j-add-tr" data-tpl="module">添加模块依赖</a>
+                        <a class="layui-btn layui-btn-sm j-add-tr" data-tpl="module">添加模块依赖</a>
                         <span class="layui-word-aux">如果您的模块有依赖其他模块，必须添加此清单</span>
                     </td>
                 </tr>
@@ -184,7 +184,7 @@
                 {/volist}
                 <tr>
                     <td colspan="5" style="background-color:#f8f8f8">
-                        <a class="layui-btn layui-btn-small j-add-tr" data-tpl="plugin">添加插件依赖</a>
+                        <a class="layui-btn layui-btn-sm j-add-tr" data-tpl="plugin">添加插件依赖</a>
                         <span class="layui-word-aux">如果您的模块有依赖其他插件，必须添加此清单</span>
                     </td>
                 </tr>
@@ -218,7 +218,7 @@
                 {/volist}
                 <tr>
                     <td colspan="2" style="background-color:#f8f8f8">
-                        <a class="layui-btn layui-btn-small j-add-tr" data-tpl="table">添加记录</a>
+                        <a class="layui-btn layui-btn-sm j-add-tr" data-tpl="table">添加记录</a>
                         <span class="layui-word-aux">有数据库表时必需添加此清单,<b class="red">不包含表前缀</b></span>
                     </td>
                 </tr>
@@ -247,7 +247,7 @@
                 {/volist}
                 <tr>
                     <td colspan="5" style="background-color:#f8f8f8">
-                        <a class="layui-btn layui-btn-small j-add-tr" data-tpl="hook">添加钩子</a>
+                        <a class="layui-btn layui-btn-sm j-add-tr" data-tpl="hook">添加钩子</a>
                         <span class="layui-word-aux">必须重装模块后新添加的钩子才生效</span>
                     </td>
                 </tr>
@@ -286,7 +286,7 @@
         <td><input type="text" name="module_depend[identifier][]" class="layui-input" lay-verify="required" placeholder="模块名.[应用ID].module.[应用分支ID]"></td>
         <td><input type="text" name="module_depend[version][]" class="layui-input" placeholder="主版本号.次版本号.修订版本号"></td>
         <td>
-            <select name="module_depend[][type]">
+            <select name="module_depend[type][]">
                 <option value="<">（ < ）小于</option>
                 <option value="<=">（<=）小于等于</option>
                 <option value=">">（ > ）大于</option>
@@ -303,7 +303,7 @@
         <td><input type="text" name="plugin_depend[identifier][]" class="layui-input" lay-verify="required" placeholder="插件名.[应用ID].plugins.[应用分支ID]"></td>
         <td><input type="text" name="plugin_depend[version][]" class="layui-input" placeholder="格式：主版本号.次版本号.修订版本号"></td>
         <td>
-            <select name="plugin_depend[][type]">
+            <select name="plugin_depend[type][]">
                 <option value="<">（ < ）小于</option>
                 <option value="<=">（<=）小于等于</option>
                 <option value=">">（ > ）大于</option>
@@ -327,6 +327,7 @@
         <td><a href="javascript:;" class="tr-del">删除</a></td>
     </tr>
 </script>
+{include file="block/layui" /}
 <script type="text/javascript">
     var formData = {:json_encode($data_info)};
 

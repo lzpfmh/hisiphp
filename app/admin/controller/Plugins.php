@@ -144,14 +144,27 @@ class Plugins extends Admin
     {
         $row = PluginsModel::where('id', $id)->field('id,name,config,title')->find()->toArray();
         if ($row['config']) {
-            $row['config'] = json_decode($row['config'], 1);
+            $config = json_decode($row['config'], 1);
+
+            foreach ($config as &$v) {
+                if (isset($v['options']) && $v['options']) {
+                    $v['options'] = array_filter(parse_attr($v['options']));
+                }
+                if ($v['type'] == 'checkbox' && isset($v['value']) && $v['value']) {
+                    if (!is_array($v['value'])) {
+                        $v['value'] = explode(',', $v['value']);
+                    }
+                }
+            }
+            $row['config'] = $config;
         } else {
             return $this->error('此插件无需配置！');
         }
 
         if ($this->request->isPost()) {
+            $postData = input('post.');
             foreach ($row['config'] as &$conf) {
-                $conf['value'] = input('post.'.$conf['name']);
+                $conf['value'] = isset($postData[$conf['name']]) ? $postData[$conf['name']] : '';
             }
             if (PluginsModel::where('id', $id)->setField('config', json_encode($row['config'], 1)) === false) {
                 return $this->error('配置保存失败！');
@@ -159,7 +172,6 @@ class Plugins extends Admin
             PluginsModel::getConfig('', true);
             return $this->success('配置保存成功。');
         }
-        
         $this->assign('data_info', $row);
         return $this->fetch();
     }
@@ -416,8 +428,9 @@ class Plugins extends Admin
      */
     public function status()
     {
-        $val   = input('param.val/d');
-        $id    = input('param.id/d');
+        $val    = input('param.val/d');
+        $id     = input('param.id/d');
+        $val    = $val+1;// 因为layui开关效果只支持0和1
 
         $res = PluginsModel::where('id', $id)->find();
 

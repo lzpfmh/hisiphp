@@ -8,14 +8,6 @@
     <link rel="stylesheet" href="__ADMIN_CSS__/style.css?v={:config('hisiphp.version')}">
     <link rel="stylesheet" href="__STATIC__/fonts/typicons/min.css?v={:config('hisiphp.version')}">
     <link rel="stylesheet" href="__STATIC__/fonts/font-awesome/min.css?v={:config('hisiphp.version')}">
-    <script src="__ADMIN_JS__/layui/layui.js?v={:config('hisiphp.version')}"></script>
-    <script>
-        var ADMIN_PATH = "{$_SERVER['SCRIPT_NAME']}", LAYUI_OFFSET = 0;
-        layui.config({
-            base: '__ADMIN_JS__/',
-            version: '{:config("hisiphp.version")}'
-        }).use('global');
-    </script>
 </head>
 <body>
 <div style="padding:0 10px;" class="mcolor">{:runhook('system_admin_tips')}</div>
@@ -29,14 +21,6 @@
     <link rel="stylesheet" href="__ADMIN_CSS__/style.css?v={:config('hisiphp.version')}">
     <link rel="stylesheet" href="__STATIC__/fonts/typicons/min.css?v={:config('hisiphp.version')}">
     <link rel="stylesheet" href="__STATIC__/fonts/font-awesome/min.css?v={:config('hisiphp.version')}">
-    <script src="__ADMIN_JS__/layui/layui.js?v={:config('hisiphp.version')}"></script>
-    <script>
-        var ADMIN_PATH = "{$_SERVER['SCRIPT_NAME']}", LAYUI_OFFSET = 60;
-        layui.config({
-            base: '__ADMIN_JS__/',
-            version: '{:config("hisiphp.version")}'
-        }).use('global');
-    </script>
 </head>
 <body>
 {php}
@@ -96,11 +80,11 @@ $ca = strtolower(request()->controller().'/'.request()->action());
                         {if condition="$vv['title'] eq '快捷菜单'"}
                             <dd><a class="admin-nav-item" href="{:url('admin/index/index')}"><i class="aicon ai-shouye"></i> 后台首页</a></dd>
                             {volist name="vv['childs']" id="vvv"}
-                            <dd><a class="admin-nav-item" href="{:url($vvv['url'].'?'.$vvv['param'])}"><i class="{$vvv['icon']}"></i> {$vvv['title']}</a><i data-href="{:url('menu/del?ids='.$vvv['id'])}" class="layui-icon j-del-menu">&#xe640;</i></dd>
+                            <dd><a class="admin-nav-item" href="{if condition="strpos('http', $vvv['url']) heq false"}__ROOT_DIR__{:config('sys.admin_path').'/'.$vvv['url']}{if condition="$vvv['param']"}?{$vvv['param']}{/if}{else /}{$vvv['url']}{/if}"><i class="{$vvv['icon']}"></i> {$vvv['title']}</a><i data-href="{:url('menu/del?ids='.$vvv['id'])}" class="layui-icon j-del-menu">&#xe640;</i></dd>
                             {/volist}
                         {else /}
                             {volist name="vv['childs']" id="vvv"}
-                            <dd><a class="admin-nav-item" href="{if condition="strpos('http', $vvv['url']) heq false"}{:url($vvv['url'].'?'.$vvv['param'])}{else /}{$vvv['url']}{/if}"><i class="{$vvv['icon']}"></i> {$vvv['title']}</a></dd>
+                            <dd><a class="admin-nav-item" href="{if condition="strpos('http', $vvv['url']) heq false"}__ROOT_DIR__{:config('sys.admin_path').'/'.$vvv['url']}{if condition="$vvv['param']"}?{$vvv['param']}{/if}{else /}{$vvv['url']}{/if}"><i class="{$vvv['icon']}"></i> {$vvv['title']}</a></dd>
                             {/volist}
                         {/if}
                     </dl>

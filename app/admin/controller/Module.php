@@ -77,6 +77,10 @@ class Module extends Admin
             $files = Dir::getList(APP_PATH);
             $sys_dir = config('hs_system.modules');
             array_push($sys_dir, 'extra');
+            if (!is_dir(ROOT_PATH.'static'.DS.'app_icon')) {
+                Dir::create(ROOT_PATH.'static'.DS.'app_icon', 0777, true);
+            }
+            
             foreach ($files as $k => $f) {
                 // 排除系统模块和已存在数据库的模块
                 if (array_search($f, $sys_dir) !== false || array_key_exists($f, $all_module) || !is_dir(APP_PATH.$f)) {
@@ -91,7 +95,8 @@ class Module extends Admin
                     $sql['title'] = $info['title'];
                     $sql['intro'] = $info['intro'];
                     $sql['author'] = $info['author'];
-                    $sql['icon'] = ROOT_DIR.substr($info['icon'], 1);
+                    copy(APP_PATH.$f.DS.$f.'.png', ROOT_PATH.'static'.DS.'app_icon'.DS.$f.'.png');
+                    $sql['icon'] = ROOT_DIR.'static/app_icon/'.$f.'.png';
                     $sql['version'] = $info['version'];
                     $sql['url'] = $info['author_url'];
                     $sql['config'] = '';
@@ -236,25 +241,41 @@ class Module extends Admin
             if (!$this->mkInfo($data)) {
                 return $this->error('配置文件更新失败');
             }
+            
+            $sqlmap = [];
+            $sqlmap['title'] = $data['title'];
+            $sqlmap['identifier'] = $data['identifier'];
+            $sqlmap['icon'] = $data['icon'];
+            $sqlmap['intro'] = $data['intro'];
+            $sqlmap['author'] = $data['author'];
+            $sqlmap['url'] = $data['url'];
+            $sqlmap['version'] = $data['version'];
+            $sqlmap['config'] = '';
+            
             // 将配置更新到数据库
             if ($config) {
-                // 重组旧配置，以方便后面找值
-                $old_config = json_decode($module_db['config'], 1);
                 $old_config_arr = [];
-                foreach ($old_config as $k => $v) {
-                    $old_config_arr[$v['name']] = $v;
+                if ($module_db['config']) {
+                    // 重组旧配置，以方便后面找值
+                    $old_config = json_decode($module_db['config'], 1);
+                    foreach ($old_config as $k => $v) {
+                        $old_config_arr[$v['name']] = $v;
+                    }
                 }
+                
                 // 将旧配置的值赋值到新配置
                 foreach ($config as $k => &$v) {
                     if (isset($old_config_arr[$v['name']])) {
                         $v['value'] = $old_config_arr[$v['name']]['value'];
                     }
                 }
-                ModuleModel::where('id', $_id)->setField('config', json_encode($config, 1));
-            } else {
-                ModuleModel::where('id', $_id)->setField('config', '');
+                $sqlmap['config'] = json_encode($config, 1);
             }
 
+            $res = ModuleModel::where('id', $_id)->update($sqlmap);
+            if (!$res) {
+                return $this->error('保存失败');
+            }
             return $this->success('保存成功');
         }
 
@@ -766,8 +787,9 @@ class Module extends Admin
      */
     public function status()
     {
-        $val   = input('param.val/d');
-        $id    = input('param.id/d');
+        $val    = input('param.val/d');
+        $id     = input('param.id/d');
+        $val    = $val+1;// 因为layui开关效果只支持0和1
 
         if ($id == 1) {
             return $this->error('禁止设置系统模块');

@@ -7,15 +7,6 @@
     <link rel="stylesheet" href="__ADMIN_CSS__/style.css?v={:config('hisiphp.version')}">
     <link rel="stylesheet" href="__STATIC__/fonts/typicons/min.css?v={:config('hisiphp.version')}">
     <link rel="stylesheet" href="__STATIC__/fonts/font-awesome/min.css?v={:config('hisiphp.version')}">
-    <script src="__ADMIN_JS__/layui/layui.js?v={:config('hisiphp.version')}"></script>
-    <script>
-        window.localStorage.clear();
-        var ADMIN_PATH = "{$_SERVER['SCRIPT_NAME']}", LAYUI_OFFSET = 60;
-        layui.config({
-            base: '__ADMIN_JS__/',
-            version: '{:config("hisiphp.version")}'
-        }).use('global');
-    </script>
     <style type="text/css">
         .hs-iframe{width:100%;height:100%;}
         .layui-tab{position:absolute;left:0;top:0;height:100%;width:100%;z-index:10;margin:0;border:none;overflow:hidden;}
@@ -41,6 +32,9 @@ $ca = strtolower(request()->controller().'/'.request()->action());
                 {/if} 
                 <a href="javascript:;">{$vo['title']}</a></li>
             {/volist}
+            <li class="layui-nav-item">
+                <a href="http://bbs.hisiphp.com" target="_blank">免费下载源码</a>
+            </li>
         </ul>
         <ul class="layui-nav fr nobg head-info" lay-filter="">
             <li class="layui-nav-item">
@@ -82,11 +76,11 @@ $ca = strtolower(request()->controller().'/'.request()->action());
                         {if condition="$vv['title'] eq '快捷菜单'"}
                             <dd><a class="admin-nav-item" data-id="0" href="{:url('admin/index/welcome')}"><i class="aicon ai-shouye"></i> 后台首页</a></dd>
                             {volist name="vv['childs']" id="vvv"}
-                            <dd><a class="admin-nav-item" data-id="{$vvv['id']}" href="{:url($vvv['url'].'?'.$vvv['param'])}"><i class="{$vvv['icon']}"></i> {$vvv['title']}</a><i data-href="{:url('menu/del?ids='.$vvv['id'])}" class="layui-icon j-del-menu">&#xe640;</i></dd>
+                            <dd><a class="admin-nav-item" data-id="{$vvv['id']}" href="{if condition="strpos('http', $vvv['url']) heq false"}__ROOT_DIR__{:config('sys.admin_path').'/'.$vvv['url']}{if condition="$vvv['param']"}?{$vvv['param']}{/if}{else /}{$vvv['url']}{/if}"><i class="{$vvv['icon']}"></i> {$vvv['title']}</a><i data-href="{:url('menu/del?ids='.$vvv['id'])}" class="layui-icon j-del-menu">&#xe640;</i></dd>
                             {/volist}
                         {else /}
                             {volist name="vv['childs']" id="vvv"}
-                            <dd><a class="admin-nav-item" data-id="{$vvv['id']}" href="{if condition="strpos('http', $vvv['url']) heq false"}{:url($vvv['url'].'?'.$vvv['param'])}{else /}{$vvv['url']}{/if}"><i class="{$vvv['icon']}"></i> {$vvv['title']}</a></dd>
+                            <dd><a class="admin-nav-item" data-id="{$vvv['id']}" href="{if condition="strpos('http', $vvv['url']) heq false"}__ROOT_DIR__{:config('sys.admin_path').'/'.$vvv['url']}{if condition="$vvv['param']"}?{$vvv['param']}{/if}{else /}{$vvv['url']}{/if}"><i class="{$vvv['icon']}"></i> {$vvv['title']}</a></dd>
                             {/volist}
                         {/if}
                     </dl>
@@ -113,6 +107,7 @@ $ca = strtolower(request()->controller().'/'.request()->action());
         <span class="fr"> © 2017-2018 <a href="{:config('hisiphp.url')}" target="_blank">{:config('hisiphp.copyright')}</a> All Rights Reserved.</span>
     </div>
 </div>
+{include file="block/layui" /}
 <script type="text/javascript">
     layui.use(['jquery', 'element', 'layer'], function() {
         var $ = layui.jquery, element = layui.element, layer = layui.layer;

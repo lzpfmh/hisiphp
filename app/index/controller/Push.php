@@ -35,10 +35,11 @@ class Push extends Home
         $this->sign = input('param.sign');
         $this->token = input('param.token');
         $this->version = input('param.version');
-        $this->app_id = input('param.app_id/d');
+        $this->app_id = input('param.app_id');
         $this->app_name = strtolower(input('param.app_name'));
+        $this->app_secret_key = input('param.secret_key');
         $this->app_identifier = strtolower(input('param.app_identifier'));
-        if (empty($this->app_id) || empty($this->sign) || empty($this->token) || empty($this->version) || empty($this->app_identifier) || empty($this->app_name)) {
+        if (empty($this->app_id) || empty($this->sign) || empty($this->token) || empty($this->version) || empty($this->app_identifier) || empty($this->app_name) || empty($this->app_secret_key)) {
             http_response_code(202);
             echo '{"code":0,"msg":"参数传递错误","data":[]}';
             exit;
@@ -133,6 +134,7 @@ class Push extends Home
         $map['author'] = isset($info['author']) ? $info['author'] : '';
         $map['url'] = isset($info['author_url']) ? $info['author_url'] : '';
         $map['app_id'] = $this->app_id;
+        $map['app_keys'] = $this->app_secret_key;
         $map['config'] = '';
         $res = ModuleModel::create($map);
         if (!$res) {
@@ -200,6 +202,7 @@ class Push extends Home
         $map['author'] = isset($info['author']) ? $info['author'] : '';
         $map['url'] = isset($info['author_url']) ? $info['author_url'] : '';
         $map['app_id'] = $this->app_id;
+        $map['app_keys'] = $this->app_secret_key;
         $map['config'] = '';
         $res = PluginsModel::create($map);
         if (!$res) {
